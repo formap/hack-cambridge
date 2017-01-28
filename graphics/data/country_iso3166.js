@@ -1,4 +1,4 @@
-{
+var isoFile = {
   "BD": "BANGLADESH",
   "BE": "BELGIUM",
   "BF": "BURKINA FASO",

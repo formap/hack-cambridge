@@ -14,7 +14,12 @@ window.addEventListener('resize', function() {
 
 var player = new THREE.Object3D();
 scene.add(player);
-
+/*
+var geometry = new THREE.CubeGeometry(71, 71, 71); // Create a 20 by 20 by 20 cube.
+var material = new THREE.MeshBasicMaterial({ color: 0x0000FF });
+var cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+*/
 // Controls
 var isDragging = false;
 var previousMousePosition = {
@@ -50,6 +55,7 @@ renderArea.addEventListener('mousemove', (e) => {
         );
 
         player.quaternion.multiplyQuaternions(deltaRotationQuaternion, player.quaternion);
+        //cube.quaternion.multiplyQuaternions(deltaRotationQuaternion, cube.quaternion);
     }
 
     previousMousePosition = {
@@ -80,9 +86,57 @@ matLoader.load('earth.mtl', function(materials) {
 
 camera.position.set(0, 0, 100);
 
+// Lightning
 var light = new THREE.PointLight(0xffffff, 6.0, 200);
 light.position.set(-5, 10, 80);
 scene.add(light);
+
+// JSON files available globally
+function loadGeoData() {
+    console.log(isoFile);
+    console.log(latlonFile);
+    var esLat = 40;
+    esLat =  Math.PI/2 - esLat * Math.PI / 180 - Math.PI * 0.01;
+    var esLon = -4;
+    esLon -= 90;
+    esLon = 2 * Math.PI - esLon * Math.PI / 180 + Math.PI * 0.06;
+    var caLat = 60;
+    caLat =  Math.PI/2 - caLat * Math.PI / 180 - Math.PI * 0.01;
+    var caLon = -95;
+    caLon -= 90;
+    caLon = 2 * Math.PI - caLon * Math.PI / 180 + Math.PI * 0.06;
+    var r = 35.5;
+    //var r = 100;
+    var esX = r * Math.cos(esLon) * Math.sin(esLat);
+    var esY = r * Math.cos(esLon);
+    var esZ = r * Math.sin(esLon) * Math.sin(esLat);
+    var caX = r * Math.cos(caLon) * Math.sin(caLat);
+    var caY = r * Math.cos(caLon);
+    var caZ = r * Math.sin(caLon) * Math.sin(caLat);
+    /*
+        x = r cos(phi) sin(theta)
+        y = r sin(phi) sin(theta)
+        z = r cos(theta)
+        theta == latitude
+        phi == longitude
+    */
+    // Draw coordinate
+    var material = new THREE.LineBasicMaterial({
+        color: 0x00ff00
+    });
+
+    var geometry = new THREE.Geometry();
+    geometry.vertices.push(
+        new THREE.Vector3( esX, esY, esZ),
+        new THREE.Vector3( -8, 8, 50),
+        new THREE.Vector3( caX, caY, caZ)
+    );
+
+    var line = new THREE.Line( geometry, material );
+    scene.add( line );
+}
+
+loadGeoData();
 
 // Start!
 document.body.appendChild(renderer.domElement);
