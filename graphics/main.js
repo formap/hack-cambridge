@@ -5,13 +5,13 @@ var object;
 var earthScale = 0.0029;
 
 var pointSize  = 0.1;
-var esPoint = new THREE.Mesh(new THREE.BoxGeometry(pointSize, pointSize, pointSize), new THREE.LineBasicMaterial());
-esPoint.position.set(0, 0, 1);
+var esPoint = new THREE.Mesh(new THREE.BoxGeometry(pointSize, pointSize, pointSize), new THREE.LineBasicMaterial({color: 0xff0000}));
+esPoint.position.set(0, 1, 0);
 scene.add(esPoint);
 
 
-var caPoint = new THREE.Mesh(new THREE.BoxGeometry(pointSize, pointSize, pointSize), new THREE.LineBasicMaterial());
-caPoint.position.set(0, 0, -1);
+var caPoint = new THREE.Mesh(new THREE.BoxGeometry(pointSize, pointSize, pointSize), new THREE.LineBasicMaterial({color: 0xff0000}));
+caPoint.position.set(0, 0, 1);
 scene.add(caPoint);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -91,6 +91,7 @@ matLoader.load('earth.mtl', function(materials) {
   loader.load('models/earth.obj', function(obj) {
     object = obj;
     //object.rotation.y = 0.05;
+    //object.rotation.x = -90;
     object.scale.set(earthScale, earthScale, earthScale);
     object.position.set(0, 0, 0);
     //scene.add(object);
@@ -107,26 +108,38 @@ scene.add(light);
 
 // JSON files available globally
 function loadGeoData() {
-    console.log(isoFile);
-    console.log(latlonFile);
     var esLat = 40;
-    esLat =  Math.PI/2 - esLat * Math.PI / 180 - Math.PI * 0.01;
+    //esLat =  Math.PI/2 - esLat * Math.PI / 180 - Math.PI * 0.01;
     var esLon = -4;
-    esLon -= 90;
-    esLon = 2 * Math.PI - esLon * Math.PI / 180 + Math.PI * 0.06;
-    var caLat = 60;
-    caLat =  Math.PI/2 - caLat * Math.PI / 180 - Math.PI * 0.01;
-    var caLon = -95;
-    caLon -= 90;
-    caLon = 2 * Math.PI - caLon * Math.PI / 180 + Math.PI * 0.06;
+    //esLon -= 90;
+    //esLon = 2 * Math.PI - esLon * Math.PI / 180 + Math.PI * 0.06;
+    esPoint.position.set(0, 0, 0);
+    esPoint.rotation.x = esLat;
+    esPoint.rotation.y = esLon;
+    esPoint.position.set(0, 1, 0);
+    var caLat = 0;
+    //caLat =  Math.PI/2 - caLat * Math.PI / 180 - Math.PI * 0.01;
+    var caLon = 0;
+    //caLon -= 90;
+    //caLon = 2 * Math.PI - caLon * Math.PI / 180 + Math.PI * 0.06;
     //var r = 35.5;
-    var r = 100;
-    esPoint.x = r * Math.cos(esLon) * Math.sin(esLat);
-    esPoint.y  = r * Math.cos(esLon);
-    esPoint.z = r * Math.sin(esLon) * Math.sin(esLat);
-    caPoint.x = r * Math.cos(caLon) * Math.sin(caLat);
-    caPoint.y = r * Math.cos(caLon);
-    caPoint.z = r * Math.sin(caLon) * Math.sin(caLat);
+    var r = 1;
+    /*
+    esPoint.position.x = r * Math.cos(esLon) * Math.sin(esLat);
+    esPoint.position.y  = r * Math.cos(esLon);
+    esPoint.position.z = r * Math.sin(esLon) * Math.sin(esLat);
+    caPoint.position.x = r * Math.cos(caLon) * Math.sin(caLat);
+    caPoint.position.y = r * Math.cos(caLon);
+    caPoint.position.z = r * Math.sin(caLon) * Math.sin(caLat);
+    
+
+    esPoint.position.x = r * Math.cos(esLon) * Math.sin(esLat);
+    esPoint.position.y  = r * Math.sin(esLon) * Math.sin(esLat);
+    esPoint.position.z = r * Math.cos(esLat);
+    caPoint.position.x = r * Math.cos(caLon) * Math.sin(caLat);
+    caPoint.position.y = r * Math.sin(caLon) * Math.sin(caLat);
+    caPoint.position.z = r * Math.cos(caLat);
+    
     /*
         x = r cos(phi) sin(theta)
         y = r sin(phi) sin(theta)
@@ -135,6 +148,7 @@ function loadGeoData() {
         phi == longitude
     */
     // Draw coordinate
+    /*
     var material = new THREE.LineBasicMaterial({
         color: 0x00ff00
     });
@@ -148,6 +162,7 @@ function loadGeoData() {
 
     var line = new THREE.Line( geometry, material );
     scene.add( line );
+    */
 }
 
 loadGeoData();
