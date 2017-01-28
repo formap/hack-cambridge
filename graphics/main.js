@@ -50,7 +50,7 @@ render();
 
 // Helpers
 function render() {
-    if (object) object.rotation.y += Math.PI / 200;
+  //  if (object) object.rotation.y += Math.PI / 200;
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
