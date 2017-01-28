@@ -2,12 +2,16 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
 var object;
-var earthScale = 0.1;
-var esPoint = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.LineBasicMaterial());
-esPoint.position.set(0, 0, 40);
+var earthScale = 0.0029;
+
+var pointSize  = 0.1;
+var esPoint = new THREE.Mesh(new THREE.BoxGeometry(pointSize, pointSize, pointSize), new THREE.LineBasicMaterial());
+esPoint.position.set(0, 0, 1);
 scene.add(esPoint);
-var caPoint = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.LineBasicMaterial());
-caPoint.position.set(1, 1, 40);
+
+
+var caPoint = new THREE.Mesh(new THREE.BoxGeometry(pointSize, pointSize, pointSize), new THREE.LineBasicMaterial());
+caPoint.position.set(0, 0, -1);
 scene.add(caPoint);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -94,7 +98,7 @@ matLoader.load('earth.mtl', function(materials) {
   });
 });
 
-camera.position.set(0, 0, 100);
+camera.position.set(0, 0, 3);
 
 // Lightning
 var light = new THREE.PointLight(0xffffff, 6.0, 200);
