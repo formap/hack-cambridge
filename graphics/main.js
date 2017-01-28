@@ -25,31 +25,27 @@ controls.enablePan = false;
 var loader = new THREE.OBJLoader();
 var matLoader = new THREE.MTLLoader();
 matLoader.setPath('models/');
-matLoader.load('globe.mtl', function(materials) {
+matLoader.load('earth.mtl', function(materials) {
   loader.setMaterials(materials);
-  loader.load('models/globe.obj', function(object) {
-    object.rotation.y = Math.PI;
-    object.scale.set(0.5, 0.5, 0.5);
+  loader.load('models/earth.obj', function(object) {
+    //object.rotation.y = Math.PI;
+    object.scale.set(0.05, 0.05, 0.05);
     object.position.set(0, 0, 0);
     //scene.add(object);
     player.add(object);
   });
 });
 
-camera.position.set(0, 0, 20);
+camera.position.set(0, 0, 100);
 
 scene.add(new THREE.AmbientLight(0xffffff));
 
 // Start!
 document.body.appendChild(renderer.domElement);
 render();
-animation();
+//animation();
 
 // Helpers
-function animation() {
-    controls.update(0.1);
-}
-
 function render() {
     requestAnimationFrame(render);
     renderer.render(scene, camera);
