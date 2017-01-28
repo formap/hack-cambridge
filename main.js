@@ -1,6 +1,7 @@
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
+var object;
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(new THREE.Color(0x00B2D6));
@@ -27,9 +28,10 @@ var matLoader = new THREE.MTLLoader();
 matLoader.setPath('models/');
 matLoader.load('earth.mtl', function(materials) {
   loader.setMaterials(materials);
-  loader.load('models/earth.obj', function(object) {
-    //object.rotation.y = Math.PI;
-    object.scale.set(0.05, 0.05, 0.05);
+  loader.load('models/earth.obj', function(obj) {
+    object = obj;
+    //object.rotation.y = 0.05;
+    object.scale.set(0.1, 0.1, 0.1);
     object.position.set(0, 0, 0);
     //scene.add(object);
     player.add(object);
@@ -38,15 +40,17 @@ matLoader.load('earth.mtl', function(materials) {
 
 camera.position.set(0, 0, 100);
 
-scene.add(new THREE.AmbientLight(0xffffff));
+var light = new THREE.PointLight(0xffffff, 6.0, 200);
+light.position.set(-5, 10, 80);
+scene.add(light);
 
 // Start!
 document.body.appendChild(renderer.domElement);
 render();
-//animation();
 
 // Helpers
 function render() {
+    //if (object) object.rotation.y += 0.01;
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
