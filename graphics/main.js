@@ -150,7 +150,8 @@ function animate() {
 }
 
 function render() {
-    // if (object) object.rotation.y = Math.PI / 200;
-    // requestAnimationFrame(render);
+
+  //  if (object) object.rotation.y += Math.PI / 200;
+    requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
