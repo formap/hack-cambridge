@@ -2,6 +2,9 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
 var object;
+var earthScale = 0.15;
+var esPoint = new THREE.Vector3( 0, 0, 0);
+var caPoint = new THREE.Vector3( 1, 1, 0);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(new THREE.Color(0x00B2D6));
@@ -56,6 +59,8 @@ renderArea.addEventListener('mousemove', (e) => {
 
         player.quaternion.multiplyQuaternions(deltaRotationQuaternion, player.quaternion);
         //cube.quaternion.multiplyQuaternions(deltaRotationQuaternion, cube.quaternion);
+        esPoint.quaternion.multiplyQuaternions(deltaRotationQuaternion, esPoint.quaternion);
+        caPoint.quaternion.multiplyQuaternions(deltaRotationQuaternion, caPoint.quaternion);
     }
 
     previousMousePosition = {
@@ -77,7 +82,7 @@ matLoader.load('earth.mtl', function(materials) {
   loader.load('models/earth.obj', function(obj) {
     object = obj;
     //object.rotation.y = 0.05;
-    object.scale.set(0.1, 0.1, 0.1);
+    object.scale.set(earthScale, earthScale, earthScale);
     object.position.set(0, 0, 0);
     //scene.add(object);
     player.add(object);
@@ -105,14 +110,14 @@ function loadGeoData() {
     var caLon = -95;
     caLon -= 90;
     caLon = 2 * Math.PI - caLon * Math.PI / 180 + Math.PI * 0.06;
-    var r = 35.5;
-    //var r = 100;
-    var esX = r * Math.cos(esLon) * Math.sin(esLat);
-    var esY = r * Math.cos(esLon);
-    var esZ = r * Math.sin(esLon) * Math.sin(esLat);
-    var caX = r * Math.cos(caLon) * Math.sin(caLat);
-    var caY = r * Math.cos(caLon);
-    var caZ = r * Math.sin(caLon) * Math.sin(caLat);
+    //var r = 35.5;
+    var r = 100;
+    esPoint.x = r * Math.cos(esLon) * Math.sin(esLat);
+    esPoint.y  = r * Math.cos(esLon);
+    esPoint.z = r * Math.sin(esLon) * Math.sin(esLat);
+    caPoint.x = r * Math.cos(caLon) * Math.sin(caLat);
+    caPoint.y = r * Math.cos(caLon);
+    caPoint.z = r * Math.sin(caLon) * Math.sin(caLat);
     /*
         x = r cos(phi) sin(theta)
         y = r sin(phi) sin(theta)
@@ -127,9 +132,9 @@ function loadGeoData() {
 
     var geometry = new THREE.Geometry();
     geometry.vertices.push(
-        new THREE.Vector3( esX, esY, esZ),
-        new THREE.Vector3( -8, 8, 50),
-        new THREE.Vector3( caX, caY, caZ)
+        esPoint,
+        new THREE.Vector3( -5, 2, 0),
+        caPoint
     );
 
     var line = new THREE.Line( geometry, material );
