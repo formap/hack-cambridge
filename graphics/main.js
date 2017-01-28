@@ -16,11 +16,51 @@ var player = new THREE.Object3D();
 scene.add(player);
 
 // Controls
-var controls = new THREE.OrbitControls( camera );
-controls.addEventListener( 'change', render );
-controls.minDistance = 75;
-controls.maxDistance = 1000;
-controls.enablePan = false;
+var isDragging = false;
+var previousMousePosition = {
+    x: 0,
+    y: 0
+};
+
+const toRadians = (angle) => {
+    return angle * (Math.PI / 180);
+};
+
+const toDegrees = (angle) => {
+    return angle * (180 / Math.PI);
+};
+
+const renderArea = renderer.domElement;
+
+renderArea.addEventListener('mousedown', (e) => {
+    isDragging = true;
+});
+
+renderArea.addEventListener('mousemove', (e) => {
+    var deltaMove = {
+        x: e.offsetX-previousMousePosition.x,
+        y: e.offsetY-previousMousePosition.y
+    };
+
+    if(isDragging) {
+
+        let deltaRotationQuaternion = new THREE.Quaternion().
+        setFromEuler(
+            new THREE.Euler(toRadians(deltaMove.y * 1), toRadians(deltaMove.x * 1), 0, 'XYZ')
+        );
+
+        player.quaternion.multiplyQuaternions(deltaRotationQuaternion, player.quaternion);
+    }
+
+    previousMousePosition = {
+        x: e.offsetX,
+        y: e.offsetY
+    };
+});
+
+document.addEventListener('mouseup', (e) => {
+    isDragging = false;
+});
 
 // Our world
 var loader = new THREE.OBJLoader();
@@ -47,10 +87,16 @@ scene.add(light);
 // Start!
 document.body.appendChild(renderer.domElement);
 render();
+animate();
 
 // Helpers
+function animate() {
+    requestAnimationFrame(animate);
+    render();
+}
+
 function render() {
-    if (object) object.rotation.y += Math.PI / 200;
-    requestAnimationFrame(render);
+    // if (object) object.rotation.y = Math.PI / 200;
+    // requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
