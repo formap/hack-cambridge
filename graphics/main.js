@@ -21,6 +21,9 @@ window.addEventListener('resize', function() {
 
 var player = new THREE.Object3D();
 scene.add(player);
+
+player.add(esPoint);
+player.add(caPoint);
 /*
 var geometry = new THREE.CubeGeometry(71, 71, 71); // Create a 20 by 20 by 20 cube.
 var material = new THREE.MeshBasicMaterial({ color: 0x0000FF });
@@ -63,8 +66,6 @@ renderArea.addEventListener('mousemove', (e) => {
 
         player.quaternion.multiplyQuaternions(deltaRotationQuaternion, player.quaternion);
         //cube.quaternion.multiplyQuaternions(deltaRotationQuaternion, cube.quaternion);
-        esPoint.quaternion.multiplyQuaternions(deltaRotationQuaternion, esPoint.quaternion);
-        caPoint.quaternion.multiplyQuaternions(deltaRotationQuaternion, caPoint.quaternion);
     }
 
     previousMousePosition = {
@@ -76,143 +77,8 @@ renderArea.addEventListener('mousemove', (e) => {
 document.addEventListener('mouseup', (e) => {
     isDragging = false;
 });
-/*
-var mouseX = 0,
-  mouseY = 0,
-  pmouseX = 0,
-  pmouseY = 0;
-var pressX = 0,
-  pressY = 0;
 
-var dragging = false;
-
-var rotateX = 0,
-  rotateY = 0;
-var rotateVX = 0,
-  rotateVY = 0;
-var rotateXMax = 90 * Math.PI / 180;
-
-var rotateTargetX = undefined;
-var rotateTargetY = undefined;
-
-function onDocumentMouseMove(event) {
-
-  pmouseX = mouseX;
-  pmouseY = mouseY;
-
-  mouseX = event.clientX - window.innerWidth * 0.5;
-  mouseY = event.clientY - window.innerHeight * 0.5;
-
-  if (dragging) {
-    camera.position.x -= (mouseX - pmouseX) * .5;
-    camera.position.y += (mouseY - pmouseY) * .5;
-  }
-}
-
-function onDocumentMouseDown(event) {
-  if (event.target.className.indexOf('noMapDrag') !== -1) {
-    return;
-  }
-  dragging = true;
-  pressX = mouseX;
-  pressY = mouseY;
-  rotateTargetX = undefined;
-  rotateTargetX = undefined;
-}
-
-function onDocumentMouseUp(event) {
-  d3Graphs.zoomBtnMouseup();
-  dragging = false;
-  histogramPressed = false;
-}
-
-function onDocumentTouchStart(event) {
-  if (event.touches.length === 1) {
-    dragging = true;
-    mouseX = event.touches[0].pageX - window.innerWidth * 0.5;
-    mouseY = event.touches[0].pageY - window.innerHeight * 0.5;
-    pmouseX = mouseX;
-    pmouseY = mouseY;
-    rotateTargetX = undefined;
-    rotateTargetX = undefined;
-  }
-}
-
-function onDocumentTouchMove(event) {
-  if (event.touches.length === 1) {
-    event.preventDefault();
-    pmouseX = mouseX;
-    pmouseY = mouseY;
-
-    mouseX = event.touches[0].pageX - window.innerWidth * 0.5;
-    mouseY = event.touches[0].pageY - window.innerHeight * 0.5;
-
-    rotateVY += (mouseX - pmouseX) / 2 * Math.PI / 180 * 0.3;
-    rotateVX += (mouseY - pmouseY) / 2 * Math.PI / 180 * 0.3;
-    rotateTargetX = undefined;
-    rotateTargetX = undefined;
-  }
-}
-
-function onDocumentTouchEnd(event) {
-    dragging = false;
-}
-
-function onClick(event) {
-  //	make the rest not work if the event was actually a drag style click
-  if (Math.abs(pressX - mouseX) > 3 || Math.abs(pressY - mouseY) > 3)
-    return;
-
-  var pickColorIndex = getPickColor();
-  //	find it
-  for (var i in countryColorMap) {
-    var countryCode = i;
-    var countryColorIndex = countryColorMap[i];
-    if (pickColorIndex == countryColorIndex) {
-      // console.log("selecting code " + countryCode);
-      var countryName = countryLookup[countryCode];
-      // console.log("converts to " + countryName);
-      if (countryName === undefined)
-        return;
-      if ($.inArray(countryName, selectableCountries) <= -1)
-        return;
-      // console.log(countryName);
-      var selection = selectionData;
-      selection.selectedCountry = countryName;
-      selectVisualization(timeBins, selection.selectedYear, [selection.selectedCountry], selection.getExportCategories(), selection.getImportCategories());
-      // console.log('selecting ' + countryName + ' from click');
-      return;
-    }
-  }
-}
-
-function onKeyDown(event) {}
-
-function handleMWheel(delta) {
-  camera.scale.z += delta * 0.1;
-  camera.scale.z = constrain(camera.scale.z, 0.7, 5.0);
-}
-
-function onMouseWheel(event) {
-  var delta = 0;
-
-  if (event.wheelDelta) {
-    delta = event.wheelDelta / 120;
-  }
-  else if (event.detail) {
-    delta = -event.detail / 3;
-  }
-
-  if (delta)
-    handleMWheel(delta);
-
-  event.returnValue = false;
-}
-
-function onDocumentResize(e) {}
-*/
-
-// Our world
+// Load earth
 var loader = new THREE.OBJLoader();
 var matLoader = new THREE.MTLLoader();
 matLoader.setPath('models/');
