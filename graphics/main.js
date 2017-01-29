@@ -138,7 +138,7 @@ loadGeoData2(latlonFile.countries.AR);
 player.add(world2);
 
 // Start!
-document.body.appendChild(renderer.domElement);
+document.getElementById('threeContainer').appendChild(renderer.domElement);
 render();
 animate();
 
