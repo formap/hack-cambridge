@@ -4,11 +4,8 @@ var renderer = new THREE.WebGLRenderer();
 var object;
 var earthScale = 0.0029;
 
-var pointSize  = 0.05;
-
 renderer.setSize(window.innerWidth, window.innerHeight);
-//renderer.setClearColor(new THREE.Color(0x00B2D6));
-renderer.setClearColor(new THREE.Color(0x003366));
+renderer.setClearColor(new THREE.Color(0x00B2D6));
 
 window.addEventListener('resize', function() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -17,8 +14,6 @@ window.addEventListener('resize', function() {
 });
 
 var player = new THREE.Object3D();
-
-scene.add(player);
 
 
 // Controls
@@ -69,14 +64,11 @@ document.addEventListener('mouseup', (e) => {
 });
 
 // Load earth
-var world1 = new THREE.Object3D();
-var earth1 = new THREE.Object3D();
-var world2 = new THREE.Object3D();
-var earth2 = new THREE.Object3D();
+var earth = new THREE.Object3D();
+var earthPivot1 = new THREE.Object3D();
+var earthPivot2 = new THREE.Object3D();
 var loader = new THREE.OBJLoader();
 var matLoader = new THREE.MTLLoader();
-var loader2 = new THREE.OBJLoader();
-var matLoader2 = new THREE.MTLLoader();
 matLoader.setPath('models/');
 matLoader.load('earth.mtl', function(materials) {
   loader.setMaterials(materials);
@@ -85,57 +77,49 @@ matLoader.load('earth.mtl', function(materials) {
 
     object.scale.set(earthScale, earthScale, earthScale);
     object.position.set(0, 0, 0);
-    earth1.add(object);
-    world1.add(earth1);
+    earthPivot1.add(object);
+    earthPivot2.add(object);
+    //earth.add(object);
+    player.add(earthPivot1);
+    player.add(earthPivot2);
+    //player.add(earth);
+
   });
 });
-
-
-matLoader2.setPath('models/');
-matLoader2.load('earth.mtl', function(materials) {
-  loader2.setMaterials(materials);
-  loader2.load('models/earth.obj', function(obj) {
-    object = obj;
-
-    object.scale.set(earthScale, earthScale, earthScale);
-    object.position.set(0, 0, 0);
-    earth2.add(object);
-    world2.add(earth2);
-  });
-});
-
 
 camera.position.set(0, 0, 3);
 
 // Lightning
 var light = new THREE.PointLight(0xffffff, 6.0, 200);
-light.position.set(-15, 15, 20);
+light.position.set(-5, 10, 80);
 scene.add(light);
 
-// JSON files available globally
-function loadGeoData1(locationCoords) {
 
+// JSON files available globally
+function addPoint1(locationCoords) {
     var p1 = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.05), new THREE.LineBasicMaterial({color: 0xff0000}));
     p1.position.set(0, 0, 1);
-    world1.add(p1);
-    earth1.rotation.x = toRadians(locationCoords.lat);
-    earth1.rotation.y = toRadians(-locationCoords.lon);
-    }
+    var location = locationCoords;
+    earthPivot1.add(p1);
+    earthPivot1.rotation.x = toRadians(-location.lat);
+    earthPivot1.rotation.y = toRadians(location.lon);
+  }
 
-function loadGeoData2(locationCoords) {
+var pointyEarth = new THREE.Object3D();
 
+function addPoint2(locationCoords) {
     var p2 = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.05), new THREE.LineBasicMaterial({color: 0xff0000}));
     p2.position.set(0, 0, 1);
-    world2.add(p2);
-    earth2.rotation.x = toRadians(locationCoords.lat);
-    earth2.rotation.y = toRadians(-locationCoords.lon);
+    var location = locationCoords;
+    earthPivot2.add(p2);
+    earthPivot2.rotation.x = toRadians(-location.lat);
+    earthPivot2.rotation.y = toRadians(location.lon);
 
     }
+addPoint1(latlonFile.countries.ES);
 
-loadGeoData1(latlonFile.countries.IT,latlonFile.countries.AR );
-player.add(world1);
-loadGeoData2(latlonFile.countries.AR);
-//player.add(world2);
+addPoint2(latlonFile.countries.AR);
+scene.add(player);
 
 // Start!
 document.body.appendChild(renderer.domElement);
@@ -150,6 +134,7 @@ function animate() {
 
 function render() {
     //  if (object) object.rotation.y += Math.PI / 200;
+    renderer.sortObjects = false;
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
