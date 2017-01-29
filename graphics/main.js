@@ -133,9 +133,9 @@ function loadGeoData2(locationCoords) {
     }
 
 loadGeoData1(latlonFile.countries.IT,latlonFile.countries.AR );
-player.add(world1);
+//player.add(world1);
 loadGeoData2(latlonFile.countries.AR);
-//player.add(world2);
+player.add(world2);
 
 // Start!
 document.body.appendChild(renderer.domElement);
