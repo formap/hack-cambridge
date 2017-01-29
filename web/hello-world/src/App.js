@@ -1,29 +1,38 @@
 import React, { Component } from 'react';
 import './App.css';
 
-const source = "https://jsonplaceholder.typicode.com/posts/";
+const source = "http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0";
 
 class App extends Component {
-
-  searchId = 1;
 
   constructor(props) {
     super(props)
     this.state = {
-      id: '',
-      title:''
+      Routes:[
+        {
+           OriginId: '',
+           DestinationId: '',
+           QuoteIds: [],
+           Price: '',
+           QuoteDateTime: ''
+        }
+      ]
     }
   }
 
 
-  fetchData(id){
+  fetchData(origin,destination,inbound,outbound){
 
-    fetch(`${source}/${id}`)
-      .then((res) => res.json() )
+    fetch(`${source}/${"GB"}/${"GBP"}/${"en-GB"}/${origin}/${destination}/${inbound}/${outbound}/${"?apiKey=ha348334469154725681039185711735"}`,
+    {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+    }}).then((res) => res.json() )
         .then((data)=>{
+          console.log(data);
           this.setState({
-            id:data.id,
-            title:data.title
+            Routes : data.Routes
           })
         })
         .catch(function(error) {
@@ -32,7 +41,7 @@ class App extends Component {
       }
 
   componentDidMount() {
-    this.fetchData(this.searchId);
+    this.fetchData("US","anywhere","anytime","anytime");
   }
 
   render(){
@@ -47,13 +56,20 @@ class App extends Component {
 }
 
 class Search extends React.Component {
- 
+
 
   render() {
     return (
       <div className="search--box">
          <form onSubmit={this.handleForm.bind(this)}>
-           <label><input type="search" ref="id"  /></label>
+         <label>Origin: </label>
+         <input type="search" ref="origin"  />
+         <label>Destination: </label>
+         <input type="search" ref="destination"  />
+         <label>Outbound Date: </label>
+         <input type="date" ref="outbound"  />
+         <label>Inbound Date: </label>
+         <input type="date" ref="inbound"  />
          </form>
       </div>
     )
@@ -61,9 +77,12 @@ class Search extends React.Component {
 
   handleForm(e) {
    e.preventDefault();
-    let id = this.refs.id.value;
-    this.props.fetchData(id);
-    this.refs.id.value = '';
+    let origin = this.refs.origin.value;
+    let destination = this.refs.origin.value;
+    let outbound = this.refs.origin.value;
+    let inbound = this.refs.origin.value;
+
+    this.props.fetchData(origin,destination,inbound,outbound);
   }
 }
 
@@ -78,9 +97,8 @@ class Info extends React.Component {
     else
       return (
         <div>
-          <h1>{data.id}</h1>
-          <h1>{data.title}</h1>
-        </div>
+          <h1></h1>
+]        </div>
       );
   }
 }

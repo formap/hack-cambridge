@@ -1,10 +1,10 @@
-body{
+body {
   margin:0;
   background-color: #003366;
   overflow: hidden;
 }
 
-#textIn{
+#textIn {
   display: block;
   position: relative;
   width: 300px;
@@ -13,7 +13,6 @@ body{
   font-size: 50px;
 }
 
-#textIn:focus{
+#textIn:focus {
   outline: none;
-
 }

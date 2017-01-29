@@ -100,7 +100,6 @@ var oldRotY = 0;
 
 // JSON files available globally
 function loadGeoData1(locationCoords) {
-
     var p1 = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.5), new THREE.LineBasicMaterial({color: 0xff0000}));
     p1.position.set(0, 0, 1);
     world1.add(p1);
@@ -110,20 +109,14 @@ function loadGeoData1(locationCoords) {
     oldRotY = -locationCoords.lon;
     earth1.rotation.x = toRadians(locationCoords.lat);
     earth1.rotation.y = toRadians(-locationCoords.lon);
-    }
-
-
-function refresh(){
-  var inVal = document.getElementById("textIn").value;
-  console.log(inVal);
-
-  }
+}
 
 textBar = document.getElementById("textIn");
-textBar.addEventListener("keydown",function(e){
-  if(e.keyCode==13){
+textBar.addEventListener("keydown", function(e) {
+  if (e.keyCode == 13) {
     country = textBar.value;
-    loadGeoData1(latlonFile.countries[country] );
+    var isoCode = countriesToIso[country];
+    loadGeoData1(latlonFile.countries[isoCode]);
   }
 });
 
