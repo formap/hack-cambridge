@@ -5,6 +5,8 @@ const source = "https://jsonplaceholder.typicode.com/posts/";
 
 class App extends Component {
 
+  searchId = 1;
+
   constructor(props) {
     super(props)
     this.state = {
@@ -30,17 +32,39 @@ class App extends Component {
       }
 
   componentDidMount() {
-    this.fetchData(3);
+    this.fetchData(this.searchId);
   }
 
   render(){
     return (
       <div>
+        <Search fetchData={this.fetchData.bind(this)}/>
         <Info data={this.state} />
       </div>
     )
   }
 
+}
+
+class Search extends React.Component {
+ 
+
+  render() {
+    return (
+      <div className="search--box">
+         <form onSubmit={this.handleForm.bind(this)}>
+           <label><input type="search" ref="id"  /></label>
+         </form>
+      </div>
+    )
+  }
+
+  handleForm(e) {
+   e.preventDefault();
+    let id = this.refs.id.value;
+    this.props.fetchData(id);
+    this.refs.id.value = '';
+  }
 }
 
 
