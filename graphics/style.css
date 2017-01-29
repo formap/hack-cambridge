@@ -1,0 +1,19 @@
+body{
+  margin:0;
+  background-color: #003366;
+  overflow: hidden;
+}
+
+#textIn{
+  display: block;
+  position: relative;
+  width: 300px;
+  height: 60px;
+  margin: 20px auto;
+  font-size: 50px;
+}
+
+#textIn:focus{
+  outline: none;
+
+}

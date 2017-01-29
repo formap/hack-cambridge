@@ -71,12 +71,8 @@ document.addEventListener('mouseup', (e) => {
 // Load earth
 var world1 = new THREE.Object3D();
 var earth1 = new THREE.Object3D();
-var world2 = new THREE.Object3D();
-var earth2 = new THREE.Object3D();
 var loader = new THREE.OBJLoader();
 var matLoader = new THREE.MTLLoader();
-var loader2 = new THREE.OBJLoader();
-var matLoader2 = new THREE.MTLLoader();
 matLoader.setPath('models/');
 matLoader.load('earth.mtl', function(materials) {
   loader.setMaterials(materials);
@@ -87,23 +83,9 @@ matLoader.load('earth.mtl', function(materials) {
     object.position.set(0, 0, 0);
     earth1.add(object);
     world1.add(earth1);
+    player.add(world1);
   });
 });
-
-
-matLoader2.setPath('models/');
-matLoader2.load('earth.mtl', function(materials) {
-  loader2.setMaterials(materials);
-  loader2.load('models/earth.obj', function(obj) {
-    object = obj;
-
-    object.scale.set(earthScale, earthScale, earthScale);
-    object.position.set(0, 0, 0);
-    earth2.add(object);
-    world2.add(earth2);
-  });
-});
-
 
 camera.position.set(0, 0, 3);
 
@@ -112,30 +94,38 @@ var light = new THREE.PointLight(0xffffff, 6.0, 200);
 light.position.set(-15, 15, 20);
 scene.add(light);
 
+var oldRotX = 0;
+var oldRotY = 0;
+
+
 // JSON files available globally
 function loadGeoData1(locationCoords) {
 
-    var p1 = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.05), new THREE.LineBasicMaterial({color: 0xff0000}));
+    var p1 = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.5), new THREE.LineBasicMaterial({color: 0xff0000}));
     p1.position.set(0, 0, 1);
     world1.add(p1);
+    earth1.rotation.x = toRadians(-oldRotX);
+    earth1.rotation.y = toRadians(oldRotY);
+    oldRotX = locationCoords.lat;
+    oldRotY = -locationCoords.lon;
     earth1.rotation.x = toRadians(locationCoords.lat);
     earth1.rotation.y = toRadians(-locationCoords.lon);
     }
 
-function loadGeoData2(locationCoords) {
 
-    var p2 = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.05), new THREE.LineBasicMaterial({color: 0xff0000}));
-    p2.position.set(0, 0, 1);
-    world2.add(p2);
-    earth2.rotation.x = toRadians(locationCoords.lat);
-    earth2.rotation.y = toRadians(-locationCoords.lon);
+function refresh(){
+  var inVal = document.getElementById("textIn").value;
+  console.log(inVal);
 
-    }
+  }
 
-loadGeoData1(latlonFile.countries.IT,latlonFile.countries.AR );
-//player.add(world1);
-loadGeoData2(latlonFile.countries.AR);
-player.add(world2);
+textBar = document.getElementById("textIn");
+textBar.addEventListener("keydown",function(e){
+  if(e.keyCode==13){
+    country = textBar.value;
+    loadGeoData1(latlonFile.countries[country] );
+  }
+});
 
 // Start!
 document.getElementById('threeContainer').appendChild(renderer.domElement);
